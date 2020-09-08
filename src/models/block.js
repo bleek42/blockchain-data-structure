@@ -1,4 +1,4 @@
-import crypto from 'crypto-js';
+import cryptoJS from 'crypto-js';
 
 export class Block {
     constructor(index, prevHash, prevProof, transactions) {
@@ -27,12 +27,22 @@ export class Block {
         return this.index;
     }
 
+    getBlockInfo() {
+        const { index, proof, prevHash, transactions, timestamp } = this;
+        return {
+            index,
+            proof,
+            prevHash,
+            transactions: transactions.map((trx) => trx.getBlockInfo()),
+            timestamp,
+        };
+    }
+
     hashValue() {
         const { index, proof, transactions, timestamp } = this;
         const blockString = `${index}-${proof}-${JSON.stringify(transactions)}-${timestamp}`;
-        const hashString = crypto.SHA256(blockString);
-        console.log(hashString);
-        return hashString;
+        const newHash = cryptoJS.SHA256(blockString);
+        return newHash;
     }
 
     getPrevHash() {
@@ -42,3 +52,12 @@ export class Block {
         return this.prevHash;
     }
 }
+
+// const myBlock = new Block(0, );
+
+const myHash = cryptoJS.SHA256('leekster');
+const encryptedProof = cryptoJS.AES.encrypt('message', 'passphrase');
+console.log(encryptedProof);
+
+// const myBlock = new Block(512, myHash)
+// console.log(myHash);
